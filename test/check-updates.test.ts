@@ -25,6 +25,13 @@ test("refreshes only scoped providers and reports candidates and missing models"
   assert.deepEqual(result.missing.map((m) => m.id), ["gone"]);
 });
 
+test("pricing warning includes old and new pricing stats", async () => {
+  const oldModel = { ...current, cost: { input: 1, output: 2 } };
+  const newModel = { ...current, id: "gemini-3.9-flash", cost: { input: 3, output: 4 } };
+  const result = await checkUpdates([{ model: oldModel }], registry([oldModel, newModel]));
+  assert.match(result.message, /pricing differs: old {"input":1,"output":2}, new {"input":3,"output":4}/);
+});
+
 test("failed refresh is distinct from no updates and retains available cached catalog", async () => {
   const reg = registry([current], true);
   const result = await checkUpdates([{ model: current }], reg);

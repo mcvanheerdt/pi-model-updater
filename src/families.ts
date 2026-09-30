@@ -99,7 +99,9 @@ export function metadataWarnings(current: ModelLike, candidate: ModelLike, think
   if (JSON.stringify(current.input ?? []) !== JSON.stringify(candidate.input ?? [])) warnings.push("input capabilities differ");
   if (current.contextWindow !== candidate.contextWindow) warnings.push("context window differs");
   if (current.maxTokens !== candidate.maxTokens) warnings.push("max output differs");
-  if (JSON.stringify(current.cost ?? {}) !== JSON.stringify(candidate.cost ?? {})) warnings.push("pricing differs");
+  if (JSON.stringify(current.cost ?? {}) !== JSON.stringify(candidate.cost ?? {})) {
+    warnings.push(`pricing differs: old ${JSON.stringify(current.cost ?? {})}, new ${JSON.stringify(candidate.cost ?? {})}`);
+  }
   if (thinkingLevel && candidate.reasoning === false) warnings.push(`thinking level ${thinkingLevel} may not be supported`);
   return warnings;
 }
