@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { checkUpdates, type Registry } from "../src/check-updates.js";
 
-const current = { provider: "opencode", id: "gemini-3.8-flash", contextWindow: 100, reasoning: true };
+const current = { provider: "opencode", id: "deepseek-v4-flash", contextWindow: 100, reasoning: true };
 const registry = (available: any[], fail = false): Registry & { calls: string[][] } => ({
   calls: [],
   async refresh({ providers }) { this.calls.push(providers); if (fail) throw new Error("offline"); },
@@ -17,19 +17,19 @@ test("empty scope does not refresh unrestricted catalog", async () => {
 });
 
 test("refreshes only scoped providers and reports candidates and missing models", async () => {
-  const reg = registry([current, { provider: "opencode", id: "gemini-3.9-flash", contextWindow: 200, reasoning: false }]);
+  const reg = registry([current, { provider: "opencode", id: "deepseek-v4.1-flash", contextWindow: 200, reasoning: false }]);
   const result = await checkUpdates([{ model: current, thinkingLevel: "high" }, { model: { provider: "x", id: "gone" } }], reg);
   assert.deepEqual(reg.calls, [["opencode", "x"]]);
-  assert.equal(result.candidates[0].candidate.id, "gemini-3.9-flash");
+  assert.equal(result.candidates[0].candidate.id, "deepseek-v4.1-flash");
   assert.ok(result.candidates[0].warnings.includes("context window differs"));
   assert.deepEqual(result.missing.map((m) => m.id), ["gone"]);
 });
 
 test("pricing warning includes old and new pricing stats", async () => {
   const oldModel = { ...current, cost: { input: 1, output: 2 } };
-  const newModel = { ...current, id: "gemini-3.9-flash", cost: { input: 3, output: 4 } };
+  const newModel = { ...current, id: "deepseek-v4.1-flash", cost: { input: 3, output: 4 } };
   const result = await checkUpdates([{ model: oldModel }], registry([oldModel, newModel]));
-  assert.match(result.message, /opencode\/gemini-3\.8-flash → opencode\/gemini-3\.9-flash \(pricing differs\)\n    old: {"input":1,"output":2}\n    new: {"input":3,"output":4}/);
+  assert.match(result.message, /opencode\/deepseek-v4-flash → opencode\/deepseek-v4\.1-flash \(pricing differs\)\n    old: {"input":1,"output":2}\n    new: {"input":3,"output":4}/);
 });
 
 test("failed refresh is distinct from no updates and retains available cached catalog", async () => {

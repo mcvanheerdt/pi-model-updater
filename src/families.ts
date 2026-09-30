@@ -41,9 +41,6 @@ function identity(model: ModelLike): Identity | undefined {
   if (provider === "openai-codex" && (match = /^gpt-(\d+(?:\.\d+)*?)-(sol|luna)$/.exec(id))) {
     return { family: `gpt-${match[2]}`, version: versionTuple(match[1])! };
   }
-  if (provider === "opencode" && (match = /^gemini-(\d+(?:\.\d+)*?)-flash$/.exec(id))) {
-    return { family: "gemini-flash", version: versionTuple(match[1])! };
-  }
   if (provider === "opencode" && (match = /^deepseek-v(\d+(?:\.\d+)*?)-flash$/.exec(id))) {
     return { family: "deepseek-flash", version: versionTuple(match[1])! };
   }
