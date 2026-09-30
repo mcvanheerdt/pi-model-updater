@@ -4,7 +4,7 @@ A Pi extension that checks the session's current shortlist for higher-version ca
 
 ## Install
 
-Install the package from a local checkout with `pi install ./pi-model-updater`, or load it for one run with `pi -e ./pi-model-updater`. Pi 0.87.1 or newer is required for `ctx.scopedModels`.
+Install the package directly from GitHub with `pi install git:github.com/mcvanheerdt/pi-model-updater`. Pi 0.87.1 or newer is required for `ctx.scopedModels`.
 
 ## Use
 
