@@ -14,6 +14,10 @@ An empty scope is unrestricted selection and is not expanded into a catalog-wide
 
 Optional startup checks are disabled by default. Set `PI_MODEL_UPDATES_STARTUP=1` to enable a best-effort, non-blocking startup check; notices are emitted only when candidates are found, with a 24-hour cooldown per extension runtime. In JSON/print modes reports are JSON on stdout, since those modes have no notification UI.
 
+## Example
+
+![Example model-updates output](updates.png)
+
 ## Development
 
 - `npm test` runs matcher and checker tests.
