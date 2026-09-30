@@ -68,8 +68,19 @@ async function performCheck(scope: ScopedModel[], registry: Registry, parentSign
       candidates.push({ current, candidate, thinkingLevel: scoped.thinkingLevel, warnings: metadataWarnings(current, candidate, scoped.thinkingLevel) });
     }
   }
-  const lines = candidates.map(({ current, candidate, warnings }) =>
-    `${current.provider}/${current.id} → ${candidate.provider}/${candidate.id}${warnings.length ? ` (warning: ${warnings.join(", ")})` : ""}`);
+  const lines = candidates.flatMap(({ current, candidate, warnings }) => {
+    const pricingDiffers = warnings.some((warning) => warning.startsWith("pricing differs:"));
+    const otherWarnings = warnings.filter((warning) => !warning.startsWith("pricing differs:"));
+    const labels = [...(pricingDiffers ? ["pricing differs"] : []), ...otherWarnings];
+    const header = `${current.provider}/${current.id} → ${candidate.provider}/${candidate.id}${labels.length ? ` (${pricingDiffers && !otherWarnings.length ? labels.join(", ") : `warning: ${labels.join(", ")}`})` : ""}`;
+    return [
+      header,
+      ...(pricingDiffers ? [
+        `    old: ${JSON.stringify(current.cost ?? {})}`,
+        `    new: ${JSON.stringify(candidate.cost ?? {})}`,
+      ] : []),
+    ];
+  });
   const message = [
     `${scope.length} shortlisted model${scope.length === 1 ? "" : "s"} checked; higher-version candidates are not guaranteed improvements.`,
     ...lines,

@@ -29,7 +29,7 @@ test("pricing warning includes old and new pricing stats", async () => {
   const oldModel = { ...current, cost: { input: 1, output: 2 } };
   const newModel = { ...current, id: "gemini-3.9-flash", cost: { input: 3, output: 4 } };
   const result = await checkUpdates([{ model: oldModel }], registry([oldModel, newModel]));
-  assert.match(result.message, /pricing differs: old {"input":1,"output":2}, new {"input":3,"output":4}/);
+  assert.match(result.message, /opencode\/gemini-3\.8-flash → opencode\/gemini-3\.9-flash \(pricing differs\)\n    old: {"input":1,"output":2}\n    new: {"input":3,"output":4}/);
 });
 
 test("failed refresh is distinct from no updates and retains available cached catalog", async () => {

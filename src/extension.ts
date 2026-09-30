@@ -50,7 +50,7 @@ export default function (pi: ExtensionAPI) {
 
   pi.on("session_start", async (_event, ctx) => {
     shutdownController = new AbortController();
-    if (process.env.PI_MODEL_UPDATES_STARTUP !== "1") return;
+    if (process.env.PI_MODEL_UPDATES_STARTUP === "0") return;
     if (Date.now() - lastStartupCheck < STARTUP_COOLDOWN_MS) return;
     lastStartupCheck = Date.now();
     const controller = shutdownController;

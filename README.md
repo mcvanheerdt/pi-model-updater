@@ -12,7 +12,7 @@ Run `/model-updates` to refresh catalogs for providers in the current scoped sho
 
 An empty scope is unrestricted selection and is not expanded into a catalog-wide search. Model IDs are matched only for the known GPT Sol/Luna (Codex), Gemini Flash (OpenCode), and DeepSeek Flash (OpenCode) families. Other families are left unsupported rather than guessed. Optional custom rules can be supplied as JSON in `PI_MODEL_UPDATE_RULES`, for example `[{"provider":"example","pattern":"^family-(\\d+(?:\\.\\d+)*)-flash$"}]`; capture group 1 must be the numeric version, and family identity is the exact model ID with that version replaced. Capability, context, pricing, and thinking-level differences are flagged when catalog metadata is available.
 
-Optional startup checks are disabled by default. Set `PI_MODEL_UPDATES_STARTUP=1` to enable a best-effort, non-blocking startup check; notices are emitted only when candidates are found, with a 24-hour cooldown per extension runtime. In JSON/print modes reports are JSON on stdout, since those modes have no notification UI.
+Best-effort, non-blocking startup checks are enabled by default; notices are emitted only when candidates are found, with a 24-hour cooldown per extension runtime. Set `PI_MODEL_UPDATES_STARTUP=0` to disable them. Startup checks only report candidates and never update saved settings. In JSON/print modes reports are JSON on stdout, since those modes have no notification UI.
 
 ## Example
 
